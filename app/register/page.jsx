@@ -13,9 +13,8 @@ const Login = () => {
   const router = useRouter();
 
   const submitLogin = async () => {
-    console.log(username);
     try {
-      const res = await fetch("http://localhost:3000/api/login", {
+      const res = await fetch("http://localhost:3000/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json", // Important header to specify JSON payload
@@ -41,8 +40,7 @@ const Login = () => {
       <h1 className="text-3xl mb-2">
         <strong>GitHub</strong> Jobs
       </h1>
-      <p className="mb-6">Login to your account</p>
-
+      <p className="mb-6">Make an account now!</p>
       <div className="flex items-center mb-4 mr-4">
         <FontAwesomeIcon icon={faUser} className="mr-4" />
         <input
@@ -64,12 +62,12 @@ const Login = () => {
       <button
         type="button"
         onClick={submitLogin}
-        className="px-4 py-2 mb-4 rounded bg-white text-slate-800 font-bold hover:bg-slate-600 hover:text-white transition"
+        className="px-4 py-2 rounded mb-4 bg-white text-slate-800 font-bold hover:bg-slate-600 hover:text-white transition"
       >
-        Login
+        Register
       </button>
-      <a href="/register" className="text-white">
-        Dont have an account?
+      <a href="/login" className="text-white">
+        Already have an account?
       </a>
     </div>
   );

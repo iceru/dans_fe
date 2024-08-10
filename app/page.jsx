@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { parseCookies } from "nookies";
 import moment from "moment";
+import { refreshToken } from "./api/refreshToken";
 
 export default function Home() {
   const [positions, setPositions] = useState([]);
@@ -25,12 +26,13 @@ export default function Home() {
         }
       );
       if (response?.status === 401) {
-        router.push("/login");
+        const refresh = await refreshToken(cookies);
+        if (refresh) {
+          return fetchPositions();
+        }
       }
-      if (response?.status === 200) {
-        const data = await response.json();
-        setPositions(data);
-      }
+      const data = await response.json();
+      setPositions(data);
     } catch (error) {
       console.log(error || "error");
     }
@@ -74,12 +76,13 @@ export default function Home() {
                   <div className="flex justify-between px-4">
                     <div>{position?.location}</div>
                     <div>
-                      <a
-                        href={`/position/${position?.id}`}
+                      <button
+                        type="button"
+                        onClick={() => router.push(`/position/${position?.id}`)}
                         className="px-4 py-2 bg-slate-800 text-white rounded-3xl text-sm"
                       >
                         Details
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </div>
