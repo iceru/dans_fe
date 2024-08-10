@@ -24,7 +24,6 @@ const fetchPosition = async (id) => {
       },
     }
   );
-  debugger;
   if (res?.status === 401) {
     const refresh = await refreshToken(cookies);
     if (refresh) {
@@ -45,12 +44,6 @@ const Position = ({ params }) => {
     };
     fetchData();
   }, [params.id]);
-
-  console.log(position);
-
-  if (!position) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div>
@@ -81,11 +74,22 @@ const Position = ({ params }) => {
             <p dangerouslySetInnerHTML={{ __html: position?.description }}></p>
           </div>
           <div className="w-full lg:w-[35%]">
-            <div className="rounded-xl bg-slate-200 text-slate-800 p-4">
-              <Image
-                src={position?.company_image}
-                alt={position?.company_title}
+            <div className="rounded-xl bg-slate-200 text-slate-800 p-4 mb-6">
+              <h3 className="font-bold text-xl mb-2">{position?.company}</h3>
+              <img
+                src={position?.company_logo}
+                className="w-full object-cover mb-2"
+                alt={position?.company}
               />
+              <a href="position?.company_url" className="text-slate-800">
+                {position?.company_url}
+              </a>
+            </div>
+            <div className="bg-slate-800 text-white p-4 rounded-xl">
+              <h3 className="font-bold text-xl mb-2">How to Apply</h3>
+              <p
+                dangerouslySetInnerHTML={{ __html: position?.how_to_apply }}
+              ></p>
             </div>
           </div>
         </div>

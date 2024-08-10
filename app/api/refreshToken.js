@@ -1,7 +1,6 @@
 const { setCookie } = require("nookies");
 
 const refreshToken = async (cookies) => {
-  debugger;
   const res = await fetch("http://localhost:3000/api/refresh-token", {
     method: "POST",
     headers: {
