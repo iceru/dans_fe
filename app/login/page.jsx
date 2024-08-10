@@ -3,17 +3,17 @@
 import { faKey, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
-import { setCookie } from "nookies";
-import { useState } from "react";
+import { destroyCookie, setCookie } from "nookies";
+import { useEffect, useState } from "react";
 
 const Login = () => {
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
+  const [error, setError] = useState();
 
   const router = useRouter();
 
   const submitLogin = async () => {
-    console.log(username);
     try {
       const res = await fetch("http://localhost:3000/api/login", {
         method: "POST",
@@ -25,6 +25,10 @@ const Login = () => {
           password,
         }),
       });
+      if (res.status === 400) {
+        const data = await res.json();
+        setError(data);
+      }
       if (res.status === 200) {
         const data = await res.json();
         localStorage.setItem("username", data?.username);
@@ -36,6 +40,13 @@ const Login = () => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    destroyCookie(null, "accessToken");
+    destroyCookie(null, "refreshToken");
+    localStorage.removeItem("username");
+  }, []);
+
   return (
     <div className="flex justify-center min-h-screen bg-slate-800 flex-col text-white items-center">
       <h1 className="text-3xl mb-2">
@@ -61,6 +72,11 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
+      {error && (
+        <div className="flex justify-center text-white bg-red-700 text-center rounded-xl px-4 text-xs py-2 mb-4">
+          {error}
+        </div>
+      )}
       <button
         type="button"
         onClick={submitLogin}

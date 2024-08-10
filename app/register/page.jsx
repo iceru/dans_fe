@@ -3,8 +3,8 @@
 import { faKey, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
-import { setCookie } from "nookies";
-import { useState } from "react";
+import { destroyCookie } from "nookies";
+import { useEffect, useState } from "react";
 
 const Login = () => {
   const [username, setUsername] = useState();
@@ -24,17 +24,17 @@ const Login = () => {
           password,
         }),
       });
-      if (res.status === 200) {
-        const data = await res.json();
-        localStorage.setItem("username", data?.username);
-        setCookie(null, "accessToken", data?.accessToken);
-        setCookie(null, "refreshToken", data?.refreshToken);
-        router.push("/");
-      }
+      router.push("/login");
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    destroyCookie(null, "accessToken");
+    destroyCookie(null, "refreshToken");
+    localStorage.removeItem("username");
+  }, []);
   return (
     <div className="flex justify-center min-h-screen bg-slate-800 flex-col text-white items-center">
       <h1 className="text-3xl mb-2">
